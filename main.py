@@ -8,7 +8,7 @@ def maa():
 
 
 def main():
-    inst = test.InstrumentationTimer("main")
+    inst = InstrumentationTimer.InstrumentationTimer("main")
     maa()
     inst.StopIt()
     
