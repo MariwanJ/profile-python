@@ -17,9 +17,9 @@ import datetime
 import time
 import threading
 import sys
+from dataclasses import dataclass
+
 #Struct in cpp
-
-
 class ProfileResult(object):
     def __init__(self):
         # instance fields found by C++ to Python Converter:
@@ -44,9 +44,7 @@ class Instrumentor(object):
         self.__m_CurrentSession = None
         self.__m_OutputStream = None
         self.__m_ProfileCount = 0
-        self.__m_ProfileCount = 0
-        
-        self.Instance = Instrumentor
+        self.current= None
 
     def BeginSession(self, name, filepath="results.json"):
         print("BeginSession")
@@ -59,20 +57,19 @@ class Instrumentor(object):
         print("EndSession")
         self.WriteFooter()
         self.__m_OutputStream.close()
+        del self.__m_CurrentSession
         self.__m_CurrentSession = None
         self.__m_ProfileCount = 0
 
     def WriteProfile(self, result):
         print("WriteProfile")
         if self.__m_ProfileCount > 0:
-            self.__m_ProfileCount += 1
             self.__m_OutputStream.write(",")
-        else:
-            self.__m_ProfileCount += 1
 
+        self.__m_ProfileCount += 1
         name = result.Name
         name.replace('"', '\'')
-
+        
         self.__m_OutputStream.write("{")
         self.__m_OutputStream.write("\"cat\":\"function\",")
         self.__m_OutputStream.write(
@@ -95,14 +92,6 @@ class Instrumentor(object):
         print("writeFooter")
         self.__m_OutputStream.write("]}")
         self.__m_OutputStream.flush()
-    
-    @staticmethod
-    def Get(self):
-        # C++ TO PYTHON CONVERTER NOTE: This static local variable declaration (not allowed in Python) has been moved just prior to the method:
-        #        static Instrumentor instance
-        return self.Instance
-
-
 class InstrumentationTimer():
     def __init__(self, name):
         # instance fields found by C++ to Python Converter:
@@ -110,8 +99,8 @@ class InstrumentationTimer():
         self.__m_Name = name
         self.__m_StartTimepoint = time.time_ns()
 
-    def close(self):
-        print("close")
+    def __del__ (self):
+        print("Destructor")
         if not self.__m_Stopped:
             self.StopIt()
 
@@ -128,5 +117,6 @@ class InstrumentationTimer():
         pro.End = end
         pro.ThreadID = threadID
         t = Instrumentor()
-        t.Get(t).WriteProfile(t , pro)
+        t.current = t
+        t.current.WriteProfile(pro)
         self.__m_Stopped = True

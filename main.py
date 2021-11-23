@@ -3,17 +3,22 @@ import sys
 from  InstrumentationTimer import *
 
 def maa():
-    timer =InstrumentationTimer(__name__ )
+    import sys
+    fn_name = sys._getframe().f_code.co_name
+    Ttimer =InstrumentationTimer(fn_name )
     for i in range(0, 10):
         print(i)
-    timer.close()
 
 def main():
-    t = Instrumentor()
-    t.Get(t).BeginSession(t,__name__ )
+    import sys
+    fn_name = sys._getframe().f_code.co_name
+    t=Instrumentor()
+    t.current = t
+    t.BeginSession(fn_name)
     maa()
-    t.Get(t).EndSession(t)
- 
+    t.EndSession()
+    
+
 
 
 main()
