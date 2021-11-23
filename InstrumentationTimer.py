@@ -20,6 +20,8 @@ import sys
 from dataclasses import dataclass
 
 #Struct in cpp
+
+
 class ProfileResult(object):
     def __init__(self):
         # instance fields found by C++ to Python Converter:
@@ -44,7 +46,7 @@ class Instrumentor(object):
         self.__m_CurrentSession = None
         self.__m_OutputStream = None
         self.__m_ProfileCount = 0
-        self.current= None
+        self.current = None
 
     def BeginSession(self, name, filepath="results.json"):
         print("BeginSession")
@@ -69,7 +71,7 @@ class Instrumentor(object):
         self.__m_ProfileCount += 1
         name = result.Name
         name.replace('"', '\'')
-        
+
         self.__m_OutputStream.write("{")
         self.__m_OutputStream.write("\"cat\":\"function\",")
         self.__m_OutputStream.write(
@@ -92,6 +94,8 @@ class Instrumentor(object):
         print("writeFooter")
         self.__m_OutputStream.write("]}")
         self.__m_OutputStream.flush()
+
+
 class InstrumentationTimer():
     def __init__(self, name):
         # instance fields found by C++ to Python Converter:
@@ -99,7 +103,7 @@ class InstrumentationTimer():
         self.__m_Name = name
         self.__m_StartTimepoint = time.time_ns()
 
-    def __del__ (self):
+    def __del__(self):
         print("Destructor")
         if not self.__m_Stopped:
             self.StopIt()
