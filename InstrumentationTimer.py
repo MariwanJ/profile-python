@@ -46,7 +46,7 @@ class Instrumentor(object):
         self.__m_CurrentSession = None
         self.__m_OutputStream = None
         self.__m_ProfileCount = 0
-        self.current = None
+        self.current = self
 
     def BeginSession(self, name, filepath="results.json"):
         print("BeginSession")
@@ -58,10 +58,11 @@ class Instrumentor(object):
     def EndSession(self):
         print("EndSession")
         self.WriteFooter()
-        self.__m_OutputStream.close()
+        #self.__m_OutputStream.close()
         del self.__m_CurrentSession
         self.__m_CurrentSession = None
         self.__m_ProfileCount = 0
+        self.current = None
 
     def WriteProfile(self, result):
         print("WriteProfile")
@@ -71,7 +72,6 @@ class Instrumentor(object):
         self.__m_ProfileCount += 1
         name = result.Name
         name.replace('"', '\'')
-
         self.__m_OutputStream.write("{")
         self.__m_OutputStream.write("\"cat\":\"function\",")
         self.__m_OutputStream.write(
@@ -82,7 +82,6 @@ class Instrumentor(object):
         self.__m_OutputStream.write("\"tid\":" + str(result.ThreadID) + ",")
         self.__m_OutputStream.write("\"ts\":" + str(result.Start))
         self.__m_OutputStream.write("}")
-
         self.__m_OutputStream.flush()
 
     def WriteHeader(self):
@@ -95,13 +94,13 @@ class Instrumentor(object):
         self.__m_OutputStream.write("]}")
         self.__m_OutputStream.flush()
 
-
 class InstrumentationTimer():
     def __init__(self, name):
         # instance fields found by C++ to Python Converter:
         self.__m_Stopped = False
         self.__m_Name = name
         self.__m_StartTimepoint = time.time_ns()
+        self.current=None
 
     def __del__(self):
         print("Destructor")
@@ -120,7 +119,5 @@ class InstrumentationTimer():
         pro.Start = start
         pro.End = end
         pro.ThreadID = threadID
-        t = Instrumentor()
-        t.current = t
-        t.current.WriteProfile(pro)
+        self.current.WriteProfile(pro)
         self.__m_Stopped = True
