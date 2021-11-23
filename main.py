@@ -6,15 +6,14 @@ def maa():
     timer =InstrumentationTimer(__name__ )
     for i in range(0, 10):
         print(i)
-    timer.StopIt()
-
+    timer.close()
 
 def main():
     t = Instrumentor()
     t.Get(t).BeginSession(t,__name__ )
     maa()
     t.Get(t).EndSession(t)
-
+ 
 
 
 main()

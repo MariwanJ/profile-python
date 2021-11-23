@@ -109,7 +109,7 @@ class InstrumentationTimer():
         self.__m_Stopped = False
         self.__m_Name = name
         self.__m_StartTimepoint = time.time_ns()
-    
+
     def close(self):
         print("close")
         if not self.__m_Stopped:
@@ -129,5 +129,4 @@ class InstrumentationTimer():
         pro.ThreadID = threadID
         t = Instrumentor()
         t.Get(t).WriteProfile(t , pro)
-        
         self.__m_Stopped = True
