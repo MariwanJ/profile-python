@@ -1,16 +1,20 @@
 import os
 import sys
-import InstrumentationTimer
+from  InstrumentationTimer import *
 
 def maa():
-    for i in range(0, 10000):
+    timer =InstrumentationTimer(__name__ )
+    for i in range(0, 10):
         print(i)
+    timer.StopIt()
 
 
 def main():
-    inst = InstrumentationTimer.InstrumentationTimer("main")
+    t = Instrumentor()
+    t.Get(t).BeginSession(t,__name__ )
     maa()
-    inst.StopIt()
-    
+    t.Get(t).EndSession(t)
+
+
 
 main()

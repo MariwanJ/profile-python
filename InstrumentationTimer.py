@@ -16,7 +16,7 @@
 import datetime
 import time
 import threading
-
+import sys
 #Struct in cpp
 
 
@@ -31,28 +31,39 @@ class ProfileResult(object):
 #Struct in cpp
 
 
+class InstrumentationSession(object):
 
-class Instrumentor():
     def __init__(self):
         # instance fields found by C++ to Python Converter:
-        self.__m_CurrentSessionName = None
+        self.Name = ""
+
+
+class Instrumentor(object):
+    def __init__(self):
+        # instance fields found by C++ to Python Converter:
+        self.__m_CurrentSession = None
         self.__m_OutputStream = None
         self.__m_ProfileCount = 0
-
-        self.__m_CurrentSessionName = None
         self.__m_ProfileCount = 0
+        
+        self.Instance = Instrumentor
 
     def BeginSession(self, name, filepath="results.json"):
+        print("BeginSession")
         self.__m_OutputStream = open(filepath, "a")
         self.WriteHeader()
-        self.__m_CurrentSessionName = name
-    
+        self.__m_CurrentSession = InstrumentationSession()
+        self.__m_CurrentSession.name = name
+
     def EndSession(self):
+        print("EndSession")
         self.WriteFooter()
-        self.__m_CurrentSessionName = None
+        self.__m_OutputStream.close()
+        self.__m_CurrentSession = None
         self.__m_ProfileCount = 0
 
     def WriteProfile(self, result):
+        print("WriteProfile")
         if self.__m_ProfileCount > 0:
             self.__m_ProfileCount += 1
             self.__m_OutputStream.write(",")
@@ -76,41 +87,47 @@ class Instrumentor():
         self.__m_OutputStream.flush()
 
     def WriteHeader(self):
+        print("writeHeader")
         self.__m_OutputStream.write("{\"otherData\": {},\"traceEvents\":[")
         self.__m_OutputStream.flush()
 
     def WriteFooter(self):
+        print("writeFooter")
         self.__m_OutputStream.write("]}")
         self.__m_OutputStream.flush()
-        self.__m_OutputStream.close()
+    
+    @staticmethod
+    def Get(self):
+        # C++ TO PYTHON CONVERTER NOTE: This static local variable declaration (not allowed in Python) has been moved just prior to the method:
+        #        static Instrumentor instance
+        return self.Instance
 
 
 class InstrumentationTimer():
     def __init__(self, name):
         # instance fields found by C++ to Python Converter:
-        self.__m_Name = '\0'
-        self.__m_StartTimepoint =  time.time_ns()
         self.__m_Stopped = False
-
         self.__m_Name = name
-        self.__m_Stopped = False
         self.__m_StartTimepoint = time.time_ns()
-        self.instrumentation = Instrumentor()
-        self.instrumentation.BeginSession(self.__m_Name)
+    
+    def close(self):
+        print("close")
+        if not self.__m_Stopped:
+            self.StopIt()
 
     def StopIt(self):
+        print("stopit")
         endTimepoint = time.time_ns()
 
         start = self.__m_StartTimepoint
         end = endTimepoint
-
         threadID = threading.current_thread().ident
         pro = ProfileResult()
         pro.Name = self.__m_Name
         pro.Start = start
         pro.End = end
         pro.ThreadID = threadID
-
-        self.instrumentation.WriteProfile(pro)
+        t = Instrumentor()
+        t.Get(t).WriteProfile(t , pro)
+        
         self.__m_Stopped = True
-        self.instrumentation.EndSession()
