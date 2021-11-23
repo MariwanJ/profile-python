@@ -1,17 +1,37 @@
-﻿#
-# Basic instrumentation profiler by Cherno
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+#
+# ***************************************************************************
+# *                                                                        *
+# * This file is a part of the Open Source Design456 Workbench - FreeCAD.  *
+# *                                                                        *
+# * Copyright (C) 2021                                                     *
+# *                                                                        *
+# *                                                                        *
+# * This library is free software; you can redistribute it and/or          *
+# * modify it under the terms of the GNU Lesser General Public             *
+# * License as published by the Free Software Foundation; either           *
+# * version 2 of the License, or (at your option) any later version.       *
+# *                                                                        *
+# * This library is distributed in the hope that it will be useful,        *
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of         *
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU      *
+# * Lesser General Public License for more details.                        *
+# *                                                                        *
+# * You should have received a copy of the GNU Lesser General Public       *
+# * License along with this library; if not, If not, see                   *
+# * <http://www.gnu.org/licenses/>.                                        *
+# *                                                                        *
+# * Author : Mariwan Jalal   mariwan.jalal@gmail.com                       *
+# **************************************************************************
 
-# Usage: include this header file somewhere in your code (eg. precompiled header), and then use like:
 #
-# Instrumentor::Get().BeginSession("Session Name");        // Begin session
-# {
-#     InstrumentationTimer timer("Profiled Scope Name");   // Place code like this in scopes you'd like to include in profiling
-#     // Code
-# }
-# Instrumentor::Get().EndSession();                        // End Session
-#
-# You will probably want to macro-fy this, to switch on/off easily and use things like __FUNCSIG__ for the profile name.
-#
+# Basic instrumentation profiler by Cherno Modified for python by Mariwan Jalal
+# found here https://gist.github.com/TheCherno
+
+
+
+
 
 import datetime
 import time
@@ -24,7 +44,6 @@ from dataclasses import dataclass
 
 class ProfileResult(object):
     def __init__(self):
-        # instance fields found by C++ to Python Converter:
         self.Name = ""
         self.Start = 0
         self.End = 0
@@ -36,13 +55,11 @@ class ProfileResult(object):
 class InstrumentationSession(object):
 
     def __init__(self):
-        # instance fields found by C++ to Python Converter:
         self.Name = ""
 
 
 class Instrumentor(object):
     def __init__(self):
-        # instance fields found by C++ to Python Converter:
         self.__m_CurrentSession = None
         self.__m_OutputStream = None
         self.__m_ProfileCount = 0
