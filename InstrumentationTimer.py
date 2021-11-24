@@ -50,8 +50,6 @@ class ProfileResult(object):
         self.ThreadID = 0
 
 #Struct in cpp
-
-
 class InstrumentationSession(object):
 
     def __init__(self):
@@ -113,7 +111,6 @@ class Instrumentor(object):
 
 class InstrumentationTimer():
     def __init__(self, name):
-        # instance fields found by C++ to Python Converter:
         self.__m_Stopped = False
         self.__m_Name = name
         self.__m_StartTimepoint =  datetime.datetime.now().microsecond #time.time_ns()
