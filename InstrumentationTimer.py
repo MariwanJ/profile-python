@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 #
 # ***************************************************************************
@@ -116,7 +116,7 @@ class InstrumentationTimer():
         # instance fields found by C++ to Python Converter:
         self.__m_Stopped = False
         self.__m_Name = name
-        self.__m_StartTimepoint = time.time_ns()
+        self.__m_StartTimepoint =  datetime.datetime.now().microsecond #time.time_ns()
         self.current=None
 
     def __del__(self):
@@ -126,7 +126,7 @@ class InstrumentationTimer():
 
     def StopIt(self):
         print("stopit")
-        endTimepoint = time.time_ns()
+        endTimepoint = datetime.datetime.now().microsecond #time.time_ns()
 
         start = self.__m_StartTimepoint
         end = endTimepoint
